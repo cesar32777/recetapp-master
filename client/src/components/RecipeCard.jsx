@@ -15,7 +15,7 @@ const RecipeCard = ({ recipe, onClick, carouselMode = false, isExpanded = false,
   useEffect(() => {
     const checkFavorite = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/favorites/check/${recipe._id}`, {
+        const response = await fetch(`https://recetapp-master.onrender.com/api/favorites/check/${recipe._id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -45,7 +45,7 @@ const RecipeCard = ({ recipe, onClick, carouselMode = false, isExpanded = false,
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/favorites/${recipe._id}`, {
+      const response = await fetch(`https://recetapp-master.onrender.com/api/favorites/${recipe._id}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
