@@ -5,6 +5,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faPlus, faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import './style/Profile.css';
 import RecipeCard from '../components/RecipeCard';
+import { Cloudinary } from '@cloudinary/url-gen';
+
+    // Configura Cloudinary (reemplaza con tus credenciales)
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName: 'dbfrj8fty', // Reemplaza con tu cloud name de Cloudinary
+    }
+  });
 
 const Perfil = () => {
   const [userRecipes, setUserRecipes] = useState([]);
@@ -23,6 +31,36 @@ const Perfil = () => {
     nombre: userData?.nombre || '',
     email: userData?.email || '',
   });
+
+  // Función para subir imagen a Cloudinary
+  const uploadImageToCloudinary = async (imageFile) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      formData.append('upload_preset', 'images'); // Reemplaza con tu upload preset
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/dbfrj8fty/image/upload`, // Reemplaza con tu cloud name
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Error al subir la imagen');
+      }
+
+      const data = await response.json();
+      return data.secure_url; // Retorna la URL segura de la imagen
+    } catch (error) {
+      console.error('Error al subir imagen:', error);
+      throw error;
+    }
+  };
+
+
+
 
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [newRecipe, setNewRecipe] = useState({
@@ -246,14 +284,14 @@ const Perfil = () => {
     if (image instanceof Blob || image instanceof File) {
       return URL.createObjectURL(image);
     }
-    if (typeof image === 'string' && image.startsWith('http')) {
-      return image;
-    }
     if (typeof image === 'string') {
-      return `https://recetapp-master.onrender.com${image}`;
+      return image; // Ya es una URL de Cloudinary
     }
     return '';
   };
+
+  // ... (el resto del componente permanece igual)
+};
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -310,35 +348,31 @@ const Perfil = () => {
     }
 
     try {
-      const formData = new FormData();
-      formData.append('name', newRecipe.name);
-      formData.append('description', newRecipe.description);
-      formData.append('instructions', JSON.stringify(newRecipe.instructions));
-      formData.append(
-        'ingredients',
-        JSON.stringify(
-          newRecipe.ingredients.map((ing) => ({
-            ingredient: ing.ingredient,
-            quantity: Number(ing.quantity),
-            notes: ing.notes || '',
-          }))
-        )
-      );
-      formData.append('category', newRecipe.category);
-      formData.append('preparationTime', newRecipe.preparationTime.toString());
-      formData.append('difficulty', newRecipe.difficulty);
+      let imageUrl = '';
       if (newRecipe.image) {
-        formData.append('image', newRecipe.image);
+        imageUrl = await uploadImageToCloudinary(newRecipe.image);
       }
-
-      console.log('Datos a enviar:', Object.fromEntries(formData.entries()));
 
       const response = await fetch('https://recetapp-master.onrender.com/api/recipes', {
         method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: formData,
+        body: JSON.stringify({
+          name: newRecipe.name,
+          description: newRecipe.description,
+          instructions: newRecipe.instructions,
+          ingredients: newRecipe.ingredients.map((ing) => ({
+            ingredient: ing.ingredient,
+            quantity: Number(ing.quantity),
+            notes: ing.notes || '',
+          })),
+          category: newRecipe.category,
+          preparationTime: newRecipe.preparationTime.toString(),
+          difficulty: newRecipe.difficulty,
+          imageUrl: imageUrl,
+        }),
       });
 
       const responseText = await response.text();
@@ -451,10 +485,10 @@ const Perfil = () => {
     e.preventDefault();
 
     try {
-      const formData = new FormData();
-      formData.append('name', editingRecipe.name);
-      formData.append('description', editingRecipe.description);
-      formData.append('instructions', JSON.stringify(editingRecipe.instructions));
+      let imageUrl = editingRecipe.imageUrl;
+      if (editingRecipe.newImage) {
+        imageUrl = await uploadImageToCloudinary(editingRecipe.newImage);
+      }
 
       const validIngredients = editingRecipe.ingredients
         .filter((ing) => ing.ingredient && !isNaN(ing.quantity))
@@ -463,14 +497,6 @@ const Perfil = () => {
           quantity: Number(ing.quantity),
           notes: ing.notes || '',
         }));
-      formData.append('ingredients', JSON.stringify(validIngredients));
-      formData.append('category', editingRecipe.category);
-      formData.append('preparationTime', editingRecipe.preparationTime.toString());
-      formData.append('difficulty', editingRecipe.difficulty);
-
-      if (editingRecipe.newImage) {
-        formData.append('image', editingRecipe.newImage);
-      }
 
       const token = localStorage.getItem('token');
       const response = await fetch(
@@ -478,9 +504,19 @@ const Perfil = () => {
         {
           method: 'PUT',
           headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: formData,
+          body: JSON.stringify({
+            name: editingRecipe.name,
+            description: editingRecipe.description,
+            instructions: editingRecipe.instructions,
+            ingredients: validIngredients,
+            category: editingRecipe.category,
+            preparationTime: editingRecipe.preparationTime.toString(),
+            difficulty: editingRecipe.difficulty,
+            imageUrl: imageUrl,
+          }),
         }
       );
 
