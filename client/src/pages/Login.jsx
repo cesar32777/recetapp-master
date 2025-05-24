@@ -36,7 +36,7 @@ const Login = () => {
 
     try {
       const { data } = await axios.post(
-        'http://localhost:5000/api/auth/login',
+        'https://recetapp-master.onrender.com/api/auth/login',
         {
           email: formData.email,
           password: formData.password
