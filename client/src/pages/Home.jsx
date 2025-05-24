@@ -133,7 +133,7 @@ function Home() {
                 {popularRecipes.map((recipe, index) => (
                   <div key={recipe._id} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
                     <img
-                      src={'http://localhost:5000' + recipe.imageUrl || '/img/default-recipe.jpg'}
+                      src={'https://recetapp-master.onrender.com' + recipe.imageUrl || '/img/default-recipe.jpg'}
                       className="d-block w-100 carousel-image"
                       alt={recipe.name}
                       style={{ height: '400px', objectFit: 'cover' }}
