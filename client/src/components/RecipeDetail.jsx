@@ -16,7 +16,7 @@ const RecipeDetail = ({ onClick, carouselMode = false, isExpanded = false, onVie
   useEffect(() => {
     const checkFavorite = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/favorites/check/${recipe._id}`, {
+        const response = await fetch(`https://recetapp-master.onrender.com/api/favorites/check/${recipe._id}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
@@ -46,7 +46,7 @@ const RecipeDetail = ({ onClick, carouselMode = false, isExpanded = false, onVie
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/favorites/${recipe._id}`, {
+      const response = await fetch(`https://recetapp-master.onrender.com/api/favorites/${recipe._id}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -77,7 +77,7 @@ const RecipeDetail = ({ onClick, carouselMode = false, isExpanded = false, onVie
           <div className="col-lg-6 mb-4">
             <div className="detail-image">
               <img
-                src={recipe.imageUrl ? `http://localhost:5000${recipe.imageUrl}` : '/default-recipe.jpg'}
+                src={recipe.imageUrl ? `https://recetapp-master.onrender.com${recipe.imageUrl}` : '/default-recipe.jpg'}
                 alt={recipe.name}
                 className="img-fluid rounded shadow"
               />
