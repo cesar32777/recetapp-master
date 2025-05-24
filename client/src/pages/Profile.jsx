@@ -250,7 +250,7 @@ const Perfil = () => {
       return image;
     }
     if (typeof image === 'string') {
-      return `http://localhost:5000${image}`;
+      return `https://recetapp-master.onrender.com${image}`;
     }
     return '';
   };
@@ -474,7 +474,7 @@ const Perfil = () => {
 
       const token = localStorage.getItem('token');
       const response = await fetch(
-        `http://localhost:5000/api/recipes/${editingRecipe._id}`,
+        `https://recetapp-master.onrender.com/api/recipes/${editingRecipe._id}`,
         {
           method: 'PUT',
           headers: {
@@ -669,7 +669,7 @@ const Perfil = () => {
                       {recipe.imageUrl && (
                         <img
                           src={
-                            'http://localhost:5000' +
+                            'https://recetapp-master.onrender.com' +
                               recipe.imageUrl || '/img/default-recipe.jpg'
                           }
                           className="card-img-top"
@@ -1165,7 +1165,7 @@ const Perfil = () => {
                             ? URL.createObjectURL(editingRecipe.newImage)
                             : editingRecipe.imageUrl.includes('http')
                             ? editingRecipe.imageUrl
-                            : `http://localhost:5000${editingRecipe.imageUrl}`
+                            : `https://recetapp-master.onrender.com${editingRecipe.imageUrl}`
                         }
                         alt="Vista previa"
                         className="img-thumbnail"
