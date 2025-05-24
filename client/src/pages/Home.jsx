@@ -29,7 +29,7 @@ function Home() {
     // Función para obtener recetas recientes
     const fetchRecentRecipes = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/recipes?limit=3');
+        const response = await fetch('https://recetapp-master.onrender.com/api/recipes?limit=3');
         if (!response.ok) throw new Error('Error al cargar recetas');
 
         const data = await response.json();
@@ -45,7 +45,7 @@ function Home() {
     // Función para obtener recetas populares
     const fetchPopularRecipes = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/favorites/popular?limit=4');
+        const response = await fetch('https://recetapp-master.onrender.com/api/favorites/popular?limit=4');
         if (!response.ok) throw new Error('Error al cargar recetas populares');
         const data = await response.json();
         setPopularRecipes(data);
