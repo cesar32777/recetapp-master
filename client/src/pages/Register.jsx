@@ -46,7 +46,7 @@ const Registro = () => {
     }
   
     try {
-      const { data } = await axios.post(' http://localhost:5000/api/auth/register', {
+      const { data } = await axios.post('https://recetapp-master.onrender.com/api/auth/register', {
         nombre: formData.nombre,
         email: formData.email,
         password: formData.password
