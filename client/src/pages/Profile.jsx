@@ -71,7 +71,7 @@ const Perfil = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await fetch('http://localhost:5000/api/favorites/user', {
+        const response = await fetch('https://recetapp-master.onrender.com/api/favorites/user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -91,7 +91,7 @@ const Perfil = () => {
   const handleUpdateProfile = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/auth/profile', {
+      const response = await fetch('https://recetapp-master.onrender.com/api/auth/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const Perfil = () => {
 
     const fetchIngredients = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/ingredients');
+        const response = await fetch('https://recetapp-master.onrender.com/api/ingredients');
         if (!response.ok) throw new Error('Error al cargar ingredientes');
         const data = await response.json();
 
@@ -193,7 +193,7 @@ const Perfil = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await fetch('http://localhost:5000/api/recipes/user', {
+        const response = await fetch('https://recetapp-master.onrender.com/api/recipes/user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -265,7 +265,7 @@ const Perfil = () => {
   const handleCreateIngredient = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/ingredients', {
+      const response = await fetch('https://recetapp-master.onrender.com/api/ingredients', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -333,7 +333,7 @@ const Perfil = () => {
 
       console.log('Datos a enviar:', Object.fromEntries(formData.entries()));
 
-      const response = await fetch('http://localhost:5000/api/recipes', {
+      const response = await fetch('https://recetapp-master.onrender.com/api/recipes', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
