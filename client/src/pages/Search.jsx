@@ -50,7 +50,7 @@ const Buscar = () => {
     setIsAuthenticated(!!token); // Si hay token, es true; si no, false
     const fetchRecipes = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/recipes');
+        const response = await fetch('https://recetapp-master.onrender.com/api/recipes');
         const data = await response.json();
         setRecipes(data);
 
@@ -80,9 +80,9 @@ const Buscar = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        let url = 'http://localhost:5000/api/recipes';
+        let url = 'https://recetapp-master.onrender.com/api/recipes';
         if (ingredientSearch.trim() !== '') {
-          url = `http://localhost:5000/api/recipes/search/ingredient?ingredient=${encodeURIComponent(ingredientSearch)}`;
+          url = `https://recetapp-master.onrender.com/api/recipes/search/ingredient?ingredient=${encodeURIComponent(ingredientSearch)}`;
         }
 
         const response = await fetch(url);
