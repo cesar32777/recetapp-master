@@ -309,7 +309,7 @@ const Buscar = () => {
                   <div className="search-result-card" key={recipe._id}>
                     <div className="position-relative overflow-hidden">
                       <img
-                        src={recipe.imageUrl ? `http://localhost:5000${recipe.imageUrl}` : '/default-recipe.jpg'}
+                        src={recipe.imageUrl ? `https://recetapp-master.onrender.com${recipe.imageUrl}` : '/default-recipe.jpg'}
                         className="search-result-img"
                         alt={recipe.name}
                       />
