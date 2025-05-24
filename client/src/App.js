@@ -11,7 +11,7 @@ import Admin from './pages/Admin';
 function App() {
   
   useEffect(() => {
-    axios.get('http://localhost:5000/api/mensaje')
+    axios.get('https://recetapp-master.onrender.com/api/mensaje')
       .then((res) => {        
       })
       .catch((err) => console.log(err));
