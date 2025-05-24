@@ -63,7 +63,7 @@ const RecipeCard = ({ recipe, onClick, carouselMode = false, isExpanded = false,
       <div className={`card h-100 ${carouselMode ? 'border-0 shadow-sm' : ''} ${isExpanded ? 'expanded-card' : ''}`}>
         <div className="card-img-container position-relative">
           <img
-            src={recipe.imageUrl ? `http://localhost:5000${recipe.imageUrl}` : '/default-recipe.jpg'}
+            src={recipe.imageUrl ? `https://recetapp-master.onrender.com${recipe.imageUrl}` : '/default-recipe.jpg'}
             className="card-img-top img-fluid"
             alt={recipe.name}
             style={{
