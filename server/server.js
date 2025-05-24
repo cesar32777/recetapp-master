@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true })); // Para parsear application/x-w
 
 // CORS
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://recetapp-master-frontend.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Añadir métodos necesarios
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
