@@ -5,6 +5,14 @@ const RecipeIngredient = require('../models/RecipeIngredient');
 const Ingredient = require('../models/Ingredient');
 const multer = require('multer');
 const path = require('path');
+const { v2: cloudinary } = require('cloudinary');
+
+// Configuración de Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 // Configuración de Multer
 const upload = multer({
@@ -26,8 +34,16 @@ exports.createRecipe = async (req, res) => {
   try {
     console.log("Cuerpo completo recibido:", req.body);
 
-    // 1. Procesar imagen (si existe)
-    const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+    // 1. Procesar imagen en Cloudinary (si existe)
+    let imageUrl = '';
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'recetapp/recipes'
+      });
+      imageUrl = result.secure_url;
+    }
+
+  
 
     // 2. Verificar campos requeridos
     const requiredFields = ['name', 'description', 'instructions', 'ingredients', 'difficulty'];
@@ -71,7 +87,7 @@ exports.createRecipe = async (req, res) => {
       category: req.body.category || 'otros',
       preparationTime: parseInt(req.body.preparationTime) || 30,
       difficulty: req.body.difficulty || 'media',
-      imageUrl,
+      imageUrl, // Usamos la URL de Cloudinary
       author: req.user.id
     };
 
@@ -263,6 +279,8 @@ exports.updateRecipe = async (req, res) => {
       return res.status(404).json({ error: 'Receta no encontrada o no tienes permiso' });
     }
 
+   
+
     // 2. Parsear ingredientes (y opcionalmente instrucciones) del body
     let parsedIngredients = [];
     let parsedInstructions = [];
@@ -294,7 +312,21 @@ exports.updateRecipe = async (req, res) => {
 
     // Si el usuario sube una nueva imagen (usando multer en la ruta), reemplazamos imageUrl
     if (req.file) {
-      recipeData.imageUrl = `/uploads/${req.file.filename}`;
+      // Eliminar imagen anterior de Cloudinary si existe
+      if (recipe.imageUrl) {
+        try {
+          const publicId = recipe.imageUrl.split('/').pop().split('.')[0];
+          await cloudinary.uploader.destroy(`recetapp/recipes/${publicId}`);
+        } catch (error) {
+          console.error("Error eliminando imagen anterior de Cloudinary:", error);
+        }
+      }
+
+      // Subir nueva imagen
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'recetapp/recipes'
+      });
+      recipe.imageUrl = result.secure_url;
     }
 
     // 4. Actualizar los campos básicos de la receta
