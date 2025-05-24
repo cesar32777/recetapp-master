@@ -1,0 +1,15 @@
+1.- en el directorio de client/frontend, correr en la terminal:
+npm i @fvilers/disable-react-devtools
+
+verificar que en package.json de client este instalado:
+@fvilers/disable-react-devtools
+
+
+2.- en index.js, dentro de src de client, agregar la siguiente linea de import:
+
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
+
+3.- despues, abajo de los import de index.js, agregar la siguiente linea:
+
+if (process.env.NODE_ENV === 'production') disableReactDevTools();
+
